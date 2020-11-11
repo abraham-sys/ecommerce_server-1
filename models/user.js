@@ -10,10 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.belongsToMany(models.Product, {
-        through: models.UserProduct,
-        foreignKey: "userId",
-      });
+      User.hasMany(models.Product);
     }
   }
   User.init(
@@ -46,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
             args: true,
             msg: "Please fill the password",
           },
-          isPassword(value) {
+          isPassword(value, next) {
             let isContainNumber = false;
             let numbers = "123456789".split("");
             value.split("").forEach((eachValue) => {
@@ -56,8 +53,7 @@ module.exports = (sequelize, DataTypes) => {
                 }
               });
             });
-            if (!isContainNumber)
-              throw new Error("Password must include number!");
+            if (!isContainNumber) next("Password must include number!");
           },
         },
       },

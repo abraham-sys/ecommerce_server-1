@@ -1,9 +1,17 @@
-const { Product } = require("../models");
+const { Product, User } = require("../models");
 
 class ProductController {
   static async allProduct(req, res, next) {
     try {
-      const foundAllProduct = await Product.findAll();
+      const foundAllProduct = await Product.findAll({
+        include: {
+          model: User,
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+        order: [["id", "ASC"]],
+      });
       res.status(200).json({ foundAllProduct });
     } catch (err) {
       next(err);
@@ -12,13 +20,14 @@ class ProductController {
 
   static async addProduct(req, res, next) {
     const { name, image_url, price, stock } = req.body;
-
+    const UserId = +req.loggedIn.id;
     try {
       await Product.create({
         name,
         image_url,
         price,
         stock,
+        UserId,
       });
       res.status(201).json({ msg: "Product is successfully created" });
     } catch (err) {
@@ -30,7 +39,17 @@ class ProductController {
     const productId = +req.params.id;
 
     try {
-      const foundProduct = await Product.findOne(productId);
+      const foundProduct = await Product.findOne({
+        where: {
+          id: productId,
+        },
+        include: {
+          model: User,
+          attributes: {
+            exclude: ["password"],
+          },
+        },
+      });
       res.status(200).json({ foundProduct });
     } catch (err) {
       next(err);
@@ -38,7 +57,7 @@ class ProductController {
   }
 
   static async updateProduct(req, res, next) {
-    const { title, description, category } = req.body;
+    const { name, image_url, price, stock } = req.body;
     const productId = +req.params.id;
 
     try {

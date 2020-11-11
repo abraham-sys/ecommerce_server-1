@@ -1,31 +1,34 @@
 const request = require("supertest");
 const app = require("../app");
-const { sequelize } = require("../models");
-const { queryInterface } = sequelize;
-const Helper = require("../helpers/helper");
 
-afterAll((done) => {
-  queryInterface
-    .bulkDelete("Products")
-    .then(() => {
+let token = "";
+
+beforeAll((done) => {
+  request(app)
+    .post("/users/login")
+    .send({
+      email: "b4s4r4@gmail.com",
+      password: "ballanar7",
+    })
+    .then((response) => {
+      token = response.body.access_token;
       done();
     })
     .catch((err) => {
+      console.log(err);
       done();
     });
 });
 
 describe("Endpoint testing for GET /products", function () {
-  it("test register: success", function (done) {
+  it("test get products: success", function (done) {
     request(app)
       .get("/products")
-      .send({ email: "b4s4r4@gmail.com", password: "ballanar7" })
+      .set("access_token", token)
       .then((response) => {
         const { body, status } = response;
-
-        expect(status).toEqual(201);
-        expect(body).toHaveProperty("id", expect.any(Number));
-        expect(body).toHaveProperty("email", "b4s4r4@gmail.com");
+        expect(status).toEqual(200);
+        expect(body.type).toBe("application/json");
         done();
       })
       .catch((err) => {
@@ -34,15 +37,14 @@ describe("Endpoint testing for GET /products", function () {
       });
   });
 
-  it("test register: email already registered", function (done) {
+  it("test get products: failed", function (done) {
     request(app)
-      .post("/users/register")
-      .send({ email: "b4s4r4@gmail.com", password: "ballanar7" })
+      .get("/products")
+      .set("access_token", "not")
       .then((response) => {
         const { body, status } = response;
-
-        expect(status).toBe(400);
-        expect(body).toHaveProperty("msg", "Email already registered");
+        expect(status).toEqual(401);
+        expect(body).toHaveProperty("msg", "Authentication failed");
         done();
       })
       .catch((err) => {
@@ -52,17 +54,23 @@ describe("Endpoint testing for GET /products", function () {
   });
 });
 
-describe("Endpoint testing for POST /login", function () {
-  it("test login success", function (done) {
+describe("Endpoint testing for POST /products", function () {
+  let product = {
+    name: "kursi",
+    image_url:
+      "https://ecs7.tokopedia.net/img/cache/700/product-1/2018/10/2/40541972/40541972_5046f648-6962-4023-8911-dfece7afbd3f_800_800.jpg",
+    price: 20000,
+    stock: 10,
+  };
+  it("test add product: success", function (done) {
     request(app)
-      .post("/users/login")
-      .send({ email: "b4s4r4@gmail.com", password: "ballanar7" })
+      .post("/products")
+      .send(product)
+      .set("access_token", token)
       .then((response) => {
-        let { body, status } = response;
-
-        expect(status).toBe(200);
-        expect(body).toHaveProperty("access_token", expect.any(String));
-        expect(body).toHaveProperty("id", expect.any(Number));
+        const { body, status } = response;
+        expect(status).toEqual(201);
+        expect(body).toHaveProperty("msg", "Product is successfully created");
         done();
       })
       .catch((err) => {
@@ -71,15 +79,86 @@ describe("Endpoint testing for POST /login", function () {
       });
   });
 
-  it("test login: email/password invalid", function (done) {
+  it("test add product: failed", function (done) {
     request(app)
-      .post("/users/login")
-      .send({ email: "b4s4r4@gmail.com", password: "ballanas7" })
+      .get("/products")
+      .send(product)
+      .set("access_token", "not")
       .then((response) => {
-        let { body, status } = response;
+        const { body, status } = response;
+        expect(status).toEqual(401);
+        expect(body).toHaveProperty("msg", "Authentication failed");
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+  });
 
-        expect(status).toBe(401);
-        expect(body).toHaveProperty("msg", "Wrong password");
+  it("test add product: validation error", function (done) {
+    product.price = 0;
+    request(app)
+      .get("/products")
+      .send(product)
+      .set("access_token", token)
+      .then((response) => {
+        const { body, status } = response;
+        expect(status).toEqual(400);
+        expect(body).toHaveProperty("msg", "do you want to be rich or not?");
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+  });
+});
+
+describe("Endpoint testing for GET /products/:id", function () {
+  it("test get certain product: success", function (done) {
+    request(app)
+      .post("/products/1")
+      .set("access_token", token)
+      .then((response) => {
+        const { body, status } = response;
+        expect(status).toEqual(200);
+        expect(body.type).toBe("application/json");
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+  });
+
+  it("test get product: failed", function (done) {
+    request(app)
+      .get("/products/1")
+      .send(product)
+      .set("access_token", "not")
+      .then((response) => {
+        const { body, status } = response;
+        expect(status).toEqual(401);
+        expect(body).toHaveProperty("msg", "Authentication failed");
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+  });
+
+  it("test add product: validation error", function (done) {
+    product.price = 0;
+    request(app)
+      .get("/products")
+      .send(product)
+      .set("access_token", token)
+      .then((response) => {
+        const { body, status } = response;
+        expect(status).toEqual(400);
+        expect(body).toHaveProperty("msg", "do you want to be rich or not?");
         done();
       })
       .catch((err) => {

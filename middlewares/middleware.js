@@ -4,7 +4,6 @@ const { User, Product } = require("../models");
 class Middleware {
   static async authentication(req, res, next) {
     const { access_token } = req.headers;
-
     try {
       if (!access_token) throw { msg: "Authentication failed", status: 401 };
       else {
@@ -31,7 +30,7 @@ class Middleware {
     try {
       const foundProduct = await Product.findByPk(productId);
       if (!foundProduct) throw { msg: "Product not found", status: 404 };
-      else if (foundProduct.id == req.loggedIn.id) next();
+      else if (foundProduct.UserId == req.loggedIn.id) next();
       else throw { msg: "Not authorized", status: 401 };
     } catch (err) {
       next(err);
@@ -51,9 +50,6 @@ class Middleware {
     } else if (err.name === "Invalid Input") {
       status = 401;
       msg = "Wrong email/password";
-    } else if (err.name === "TokenExpiredError") {
-      status = 401;
-      msg = "Your away from the app for God knows how long! Please relogin!";
     } else if (err.name === "Authentication failed") {
       status = 401;
       msg = "Authentication failed";
