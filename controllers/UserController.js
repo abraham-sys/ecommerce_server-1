@@ -28,6 +28,17 @@ class UserController {
       next(err);
     }
   }
+
+  static async register(req, res, next) {
+    const { email, password} = req.body;
+    try {
+      const newUser = await User.create({email, password});
+      res.status(201).json({id: newUser.id, email: newUser.email});
+    } catch (err) {
+      next(err);
+    }
+  }
+
 }
 
 module.exports = UserController;

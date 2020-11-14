@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       hooks: {
-        beforeCreate(instance) {
+        beforeCreate(instance, options) {
           instance.password = Helper.hashPassword(instance.password);
         },
       },
