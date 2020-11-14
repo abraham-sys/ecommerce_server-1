@@ -14,7 +14,7 @@ module.exports = {
           stock: 10,
           createdAt: new Date(),
           updatedAt: new Date(),
-          UserId: 5,
+          UserId: 7,
         },
       ],
       {}
