@@ -3,7 +3,7 @@ const router = express.Router();
 const ProductController = require("../controllers/ProductController");
 const Middleware = require("../middlewares/middleware");
 
-router.use(Middleware.authentication);
+router.use(Middleware.adminAuth);
 router.get("/", ProductController.allProduct);
 router.post("/", ProductController.addProduct);
 router.get("/:id", Middleware.authorization, ProductController.getOneProduct);

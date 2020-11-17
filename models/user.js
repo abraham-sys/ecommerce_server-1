@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             User.findOne({ where: { email: value } }).then((data) => {
               if (!data) next();
               else {
-                next("Email already registered");
+                next ("Email already registered");
               }
             });
           },
@@ -57,7 +57,11 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      role: DataTypes.STRING,
+      role: { 
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'customer'
+      }
     },
     {
       hooks: {
