@@ -1,6 +1,6 @@
 const { Banner } = require("../models");
 
-class ProductController {
+class BannerController {
   static async allBanner(req, res, next) {
     try {
       const foundAllBanner = await Banner.findAll({
@@ -75,4 +75,4 @@ class ProductController {
   }
 }
 
-module.exports = ProductController;
+module.exports = BannerController;

@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             args: true,
-            msg: "fill the image_url",
+            msg: "Fill the image_url",
           },
           isUrl: {
             args: true,
@@ -42,11 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             args: true,
-            msg: "fill the price",
+            msg: "Fill the price",
           },
           min: {
             args: true,
-            msg: "do you want to be rich or not?",
+            msg: "Do you want to be rich or not?",
           },
         },
       },
@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             args: true,
-            msg: "fill the stock",
+            msg: "Fill the stock",
           },
           min: {
             args: true,
-            msg: "a rich man doesn't sell nothin",
+            msg: "A rich man doesn't sell nothin",
           },
         },
       },
