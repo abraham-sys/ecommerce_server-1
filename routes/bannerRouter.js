@@ -3,8 +3,8 @@ const router = express.Router();
 const BannerController = require("../controllers/BannerController");
 const Middleware = require("../middlewares/middleware");
 
-router.use(Middleware.adminAuth);
 router.get("/", BannerController.allBanner);
+router.use(Middleware.adminAuth);
 router.post("/", BannerController.addBanner);
 router.get("/:id", BannerController.getOneBanner);
 router.put("/:id", BannerController.updateBanner);

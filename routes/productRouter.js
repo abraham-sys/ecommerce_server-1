@@ -3,14 +3,12 @@ const router = express.Router();
 const ProductController = require("../controllers/ProductController");
 const Middleware = require("../middlewares/middleware");
 
-router.use(Middleware.adminAuth);
 router.get("/", ProductController.allProduct);
-router.post("/", ProductController.addProduct);
-router.get("/:id", Middleware.authorization, ProductController.getOneProduct);
-router.put("/:id", Middleware.authorization, ProductController.updateProduct);
+router.post("/", Middleware.adminAuth, ProductController.addProduct);
+router.get("/:id", Middleware.adminAuth, ProductController.getOneProduct);
+router.put("/:id", Middleware.adminAuth, ProductController.updateProduct);
 router.delete(
-  "/:id",
-  Middleware.authorization,
+  "/:id", Middleware.adminAuth,
   ProductController.deleteProduct
 );
 

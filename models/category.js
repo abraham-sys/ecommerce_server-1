@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
             data.forEach(el => {
               if(el.name.toLowerCase() === value.toLowerCase())  next ("That category is already exist")
             })
+            next()
           });
         },
       }

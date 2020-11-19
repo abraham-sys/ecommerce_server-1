@@ -37,7 +37,7 @@ class Middleware {
           },
         });
         if (!loggedUser) throw { msg: "Authentication failed", status: 401 };
-        else if (loggedUser != "customer") throw { msg: "Authentication failed", status: 401 };
+        else if (loggedUser.role != "customer") throw { msg: "Authentication failed", status: 401 };
         else {
           req.loggedIn = decoded;
           next();
@@ -72,11 +72,7 @@ class Middleware {
     ) {
       status = 400;
       msg = err.errors.map((el) => el.message).join(", ");
-    } else if (err.name === "TokenExpiredError") {
-      status = 401;
-      msg = "Your away from the app for too long.. Please relogin";
-    }  
-    else if (err.name === "Invalid Input") {
+    } else if (err.name === "Invalid Input") {
       status = 401;
       msg = "Wrong email/password";
     } else if (err.name === "Authentication failed") {

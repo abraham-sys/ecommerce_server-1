@@ -13,7 +13,6 @@ module.exports = {
           stock: 10,
           createdAt: new Date(),
           updatedAt: new Date(),
-          UserId: 5,
           CategoryId: 1
         },
         {
@@ -24,7 +23,6 @@ module.exports = {
           stock: 7,
           createdAt: new Date(),
           updatedAt: new Date(),
-          UserId: 5,
           CategoryId: 1
         },
         {
@@ -35,7 +33,6 @@ module.exports = {
           stock: 12,
           createdAt: new Date(),
           updatedAt: new Date(),
-          UserId: 5,
           CategoryId: 1
         },
         {
@@ -46,7 +43,6 @@ module.exports = {
           stock: 3,
           createdAt: new Date(),
           updatedAt: new Date(),
-          UserId: 5,
           CategoryId: 2
         },
       ],

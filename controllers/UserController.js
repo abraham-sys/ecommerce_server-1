@@ -2,7 +2,7 @@ const { User } = require("../models");
 const Helper = require("../helpers/helper");
 
 class UserController {
-  static async login(req, res, next) {
+  static async loginAdmin(req, res, next) {
     const { email, password } = req.body;
     try {
       const foundUser = await User.findOne({
@@ -11,7 +11,7 @@ class UserController {
         },
       });
       if (foundUser == null) throw { msg: "User not found", status: 404 };
-      else if (foundUser.role != "admin") throw { msg: "Only for admin" };
+      else if (foundUser.role != "admin") throw { msg: "Only for admin", status: 401 };
       else if (!Helper.comparePassword(password, foundUser.password))
         throw { msg: "Wrong password!", status: 401 };
       else {
@@ -38,7 +38,7 @@ class UserController {
         },
       });
       if (foundUser == null) throw { msg: "User not found", status: 404 };
-      else if (foundUser.role != "customer") throw { msg: "only for customer" };
+      else if (foundUser.role != "customer") throw { msg: "only for customer", status: 401 };
       else if (!Helper.comparePassword(password, foundUser.password))
         throw { msg: "Wrong password!", status: 401 };
       else {
@@ -56,15 +56,12 @@ class UserController {
     }
   }
 
-  static async register (req, res, next) {
-    console.log("masuk di register");
-    const { email, password} = req.body;
+  static async registerCustomer (req, res, next) {
+    const { email, password } = req.body;
     try {
-      console.log("di try-nya register");
       const newUser = await User.create({email, password});
       res.status(201).json({id: newUser.id, email: newUser.email});
     } catch (err) {
-      console.log("di catch nya register");
       next(err);
     }
   }

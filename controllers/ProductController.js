@@ -4,12 +4,7 @@ class ProductController {
   static async allProduct(req, res, next) {
     try {
       const foundAllProduct = await Product.findAll({
-        include: [{
-          model: User,
-          attributes: {
-            exclude: ["password"],
-          },
-        },
+        include: [
         { model: Category}
       ],
         order: [["id", "ASC"]],
@@ -21,8 +16,10 @@ class ProductController {
   }
 
   static async addProduct(req, res, next) {
-    const { name, image_url, price, stock } = req.body;
-    const CategoryId = +req.body.category
+    const { name, image_url, price, stock, category } = req.body;
+    const foundCategory = await Category.findOne({where: {
+      name: category
+    }})
     
     const UserId = +req.loggedIn.id;
     try {
@@ -32,7 +29,7 @@ class ProductController {
         price,
         stock,
         UserId,
-        CategoryId
+        CategoryId: foundCategory.id
       });
       res.status(201).json({ msg: "Product is successfully created" });
     } catch (err) {
