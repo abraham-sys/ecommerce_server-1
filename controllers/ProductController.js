@@ -1,4 +1,4 @@
-const { Product, User, Category } = require("../models");
+const { Product, Category } = require("../models");
 
 class ProductController {
   static async allProduct(req, res, next) {
@@ -29,7 +29,7 @@ class ProductController {
         price,
         stock,
         UserId,
-        CategoryId: foundCategory.id
+        CategoryId: +foundCategory.id
       });
       res.status(201).json({ msg: "Product is successfully created" });
     } catch (err) {
@@ -46,10 +46,7 @@ class ProductController {
           id: productId,
         },
         include: {
-          model: User,
-          attributes: {
-            exclude: ["password"],
-          },
+          model: Category
         },
       });
       res.status(200).json({ foundProduct });
@@ -59,8 +56,15 @@ class ProductController {
   }
 
   static async updateProduct(req, res, next) {
-    const { name, image_url, price, stock } = req.body;
-    const CategoryId = +req.body.category
+    const { name, image_url, price, stock, category } = req.body;
+    
+    const foundCategory = await Category.findOne({
+      where: {
+        name: category
+      }
+    })
+    
+    const CategoryId = +foundCategory.id
     const productId = +req.params.id;
 
     try {
