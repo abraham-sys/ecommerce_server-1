@@ -13,7 +13,7 @@ module.exports = {
           stock: 10,
           createdAt: new Date(),
           updatedAt: new Date(),
-          CategoryId: 1
+          CategoryId: 10
         },
         {
           name: "Assassins Creed Valhalla",
@@ -23,7 +23,7 @@ module.exports = {
           stock: 7,
           createdAt: new Date(),
           updatedAt: new Date(),
-          CategoryId: 1
+          CategoryId: 10
         },
         {
           name: "Assassins Creed Odyssey",
@@ -33,7 +33,7 @@ module.exports = {
           stock: 12,
           createdAt: new Date(),
           updatedAt: new Date(),
-          CategoryId: 1
+          CategoryId: 10
         },
         {
           name: "PS 5",
@@ -43,7 +43,7 @@ module.exports = {
           stock: 3,
           createdAt: new Date(),
           updatedAt: new Date(),
-          CategoryId: 2
+          CategoryId: 11
         },
       ],
       {}
